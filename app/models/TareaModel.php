@@ -64,4 +64,18 @@ class TareaModel {
     public function tipos(): array {
         return $this->db->query("SELECT * FROM tipos_tarea ORDER BY nombre")->fetchAll();
     }
+
+    public function addTipo(string $nombre): int {
+        $stmt = $this->db->prepare("INSERT INTO tipos_tarea (nombre) VALUES (?)");
+        $stmt->execute([$nombre]);
+        return (int)$this->db->lastInsertId();
+    }
+
+    public function editTipo(int $id, string $nombre): bool {
+        return $this->db->prepare("UPDATE tipos_tarea SET nombre=? WHERE id=?")->execute([$nombre, $id]);
+    }
+
+    public function deleteTipo(int $id): bool {
+        return $this->db->prepare("DELETE FROM tipos_tarea WHERE id=?")->execute([$id]);
+    }
 }

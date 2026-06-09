@@ -66,6 +66,25 @@ class EmpleadoModel {
                         ->execute([password_hash($password, PASSWORD_DEFAULT), $id]);
     }
 
+    /** Actualiza sólo los datos de perfil del propio usuario (sin rol ni activo). */
+    public function actualizarPerfil(int $id, array $d): bool {
+        $stmt = $this->db->prepare(
+            "UPDATE empleados SET nombre=?, apellidos=?, email=?, telefono=?, fecha_nacimiento=? WHERE id=?"
+        );
+        return $stmt->execute([
+            $d['nombre'], $d['apellidos'] ?? '', $d['email'],
+            $d['telefono'] ?? null, $d['fecha_nacimiento'] ?: null, $id,
+        ]);
+    }
+
+    /** Comprueba que la contraseña en claro coincide con la almacenada. */
+    public function verificarPassword(int $id, string $password): bool {
+        $stmt = $this->db->prepare("SELECT password FROM empleados WHERE id=?");
+        $stmt->execute([$id]);
+        $hash = $stmt->fetchColumn();
+        return $hash && password_verify($password, $hash);
+    }
+
     public function setActivo(int $id, int $activo): bool {
         return $this->db->prepare("UPDATE empleados SET activo=? WHERE id=?")->execute([$activo, $id]);
     }

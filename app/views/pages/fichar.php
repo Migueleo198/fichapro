@@ -12,7 +12,7 @@ $enDescanso = (bool)$descanso;
 
     <!-- Clock panel -->
     <div class="card" style="text-align:center;padding:2rem 1.5rem;">
-        <div id="clock" style="font-size:3rem;font-weight:900;color:#0A2E4E;letter-spacing:1px;font-variant-numeric:tabular-nums;">--:--:--</div>
+        <div id="clock" style="font-size:3rem;font-weight:900;color:#1E3A8A;letter-spacing:1px;font-variant-numeric:tabular-nums;">--:--:--</div>
 
         <div id="statusPill" style="display:inline-block;margin:.5rem 0 1.5rem;padding:.4rem 1.1rem;border-radius:99px;font-weight:800;font-size:.85rem;
              background:<?= $enDescanso ? '#fff7ed' : ($enCurso ? '#dcfce7' : '#f1f5f9') ?>;
@@ -21,14 +21,14 @@ $enDescanso = (bool)$descanso;
         </div>
 
         <?php if ($enCurso): ?>
-        <div style="font-size:.82rem;color:#7a9cb0;font-weight:700;margin-bottom:1.25rem;">
+        <div style="font-size:.82rem;color:#64748B;font-weight:700;margin-bottom:1.25rem;">
             Entrada: <?= hhmm($abierto['hora_entrada']) ?> h
         </div>
         <?php endif; ?>
 
         <div style="display:flex;flex-direction:column;gap:.6rem;max-width:280px;margin:0 auto;">
             <?php if (!$enCurso): ?>
-                <button onclick="entrada()" class="btn btn-teal" style="justify-content:center;padding:.9rem;font-size:1rem;">
+                <button onclick="entrada()" class="btn btn-success" style="justify-content:center;padding:.9rem;font-size:1rem;">
                     <i class="bi bi-box-arrow-in-right"></i> Fichar entrada
                 </button>
             <?php else: ?>
@@ -45,7 +45,7 @@ $enDescanso = (bool)$descanso;
                     <i class="bi bi-play-circle"></i> Reanudar (<?= e($descanso['motivo']) ?>)
                 </button>
                 <?php endif; ?>
-                <button onclick="salida()" class="btn btn-danger" style="justify-content:center;padding:.9rem;font-size:1rem;" <?= $enDescanso ? 'disabled title="Reanuda antes de salir"' : '' ?>>
+                <button onclick="salida()" class="btn btn-danger-solid" style="justify-content:center;padding:.9rem;font-size:1rem;" <?= $enDescanso ? 'disabled title="Reanuda antes de salir"' : '' ?>>
                     <i class="bi bi-box-arrow-right"></i> Fichar salida
                 </button>
             <?php endif; ?>
@@ -77,7 +77,7 @@ $enDescanso = (bool)$descanso;
                 <tbody>
                 <?php foreach ($hoy as $f): ?>
                 <tr>
-                    <td style="font-weight:800;color:#0A2E4E;"><?= hhmm($f['hora_entrada']) ?></td>
+                    <td style="font-weight:800;color:#1E3A8A;"><?= hhmm($f['hora_entrada']) ?></td>
                     <td><?= hhmm($f['hora_salida']) ?></td>
                     <td><?= horasLegibles($f['total_horas']) ?></td>
                     <td><?= estadoFichajeBadge($f['estado']) ?></td>

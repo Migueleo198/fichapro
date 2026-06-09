@@ -1,6 +1,20 @@
 <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
     <div><h1 class="page-title">Tareas</h1><p class="muted" style="font-weight:600;margin:.3rem 0 0;"><?= $esAdmin ? 'Tareas registradas por la plantilla' : 'Registra el trabajo de tu jornada' ?></p></div>
-    <?php if (!$esAdmin): ?><button onclick="document.getElementById('tkMod').classList.add('open')" class="btn btn-teal"><i class="bi bi-plus-lg"></i> Nueva tarea</button><?php endif; ?>
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button type="button" class="btn btn-ghost" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                <i class="bi bi-funnel"></i> Filtros <span class="filtro-dot" data-fp-dot style="display:none;"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end fp-filtros" data-fp-target="#tkBody">
+                <label class="lbl">Buscar</label>
+                <input class="inp mb-2" data-fp-key="search" placeholder="<?= $esAdmin ? 'Empleado, tarea, tipo…' : 'Tarea, tipo…' ?>">
+                <label class="lbl">Estado</label>
+                <select class="inp mb-3" data-fp-key="estado" data-fp-mode="eq"><option value="">Todos</option><option value="pendiente">Pendiente</option><option value="en_progreso">En progreso</option><option value="finalizada">Finalizada</option></select>
+                <button type="button" class="btn btn-ghost w-100" style="justify-content:center;" data-fp-clear><i class="bi bi-x-circle"></i> Limpiar</button>
+            </div>
+        </div>
+        <?php if (!$esAdmin): ?><button onclick="document.getElementById('tkMod').classList.add('open')" class="btn btn-teal"><i class="bi bi-plus-lg"></i> Nueva tarea</button><?php endif; ?>
+    </div>
 </div>
 
 <div class="card">
@@ -8,13 +22,15 @@
     <div style="overflow-x:auto;">
     <table class="tbl">
         <thead><tr><th>Fecha</th><?php if($esAdmin):?><th>Empleado</th><?php endif;?><th>Tarea</th><th>Tipo</th><th>Horario</th><th>Horas</th><th>Estado</th><th></th></tr></thead>
-        <tbody>
+        <tbody id="tkBody">
         <?php foreach ($lista as $t): ?>
-        <tr id="tk-<?= $t['id'] ?>">
+        <tr id="tk-<?= $t['id'] ?>" data-row
+            data-search="<?= e(strtolower($t['titulo'].' '.($t['nombre'] ?? '').' '.($t['apellidos'] ?? '').' '.($t['tipo_nombre'] ?? '').' '.($t['descripcion'] ?? ''))) ?>"
+            data-estado="<?= e($t['estado']) ?>">
             <td style="white-space:nowrap;font-weight:700;"><?= fechaLarga($t['fecha']) ?></td>
             <?php if($esAdmin):?><td><?= e($t['nombre'].' '.$t['apellidos']) ?></td><?php endif;?>
-            <td style="font-weight:800;color:#0A2E4E;"><?= e($t['titulo']) ?><?php if($t['descripcion']):?><br><span class="muted" style="font-size:.76rem;font-weight:400;"><?= e($t['descripcion']) ?></span><?php endif;?></td>
-            <td><?= $t['tipo_nombre'] ? badge($t['tipo_nombre'],'#e0f9f8','#0A2E4E') : '—' ?></td>
+            <td style="font-weight:800;color:#1E3A8A;"><?= e($t['titulo']) ?><?php if($t['descripcion']):?><br><span class="muted" style="font-size:.76rem;font-weight:400;"><?= e($t['descripcion']) ?></span><?php endif;?></td>
+            <td><?= $t['tipo_nombre'] ? badge($t['tipo_nombre'],'#EFF6FF','#1E3A8A') : '—' ?></td>
             <td class="mid" style="font-size:.8rem;"><?= hhmm($t['hora_inicio']) ?> – <?= hhmm($t['hora_fin']) ?></td>
             <td><?= horasLegibles($t['total_horas']) ?></td>
             <td><?php
@@ -36,7 +52,7 @@
 
 <?php if (!$esAdmin): ?>
 <div class="modal-bg" id="tkMod">
-    <div class="modal">
+    <div class="modal-box">
         <div class="modal-head"><span><i class="bi bi-list-task"></i> Nueva tarea</span><button class="modal-x" onclick="document.getElementById('tkMod').classList.remove('open')">✕</button></div>
         <form style="padding:1.4rem;display:flex;flex-direction:column;gap:.85rem;" onsubmit="saveTk(event)">
             <div><label class="lbl">Título *</label><input id="tk_tit" class="inp" required></div>

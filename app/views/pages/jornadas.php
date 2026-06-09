@@ -11,7 +11,7 @@
         <tbody>
         <?php foreach ($jornadas as $j): ?>
         <tr id="j-<?= $j['id'] ?>">
-            <td style="font-weight:800;color:#0A2E4E;"><?= e($j['nombre'].' '.$j['apellidos']) ?></td>
+            <td style="font-weight:800;color:#1E3A8A;"><?= e($j['nombre'].' '.$j['apellidos']) ?></td>
             <td><?= rtrim(rtrim(number_format($j['horas_dia'],2),'0'),'.') ?> h</td>
             <td><?= rtrim(rtrim(number_format($j['horas_semana'],2),'0'),'.') ?> h</td>
             <td><?= fechaLarga($j['fecha_inicio']) ?></td>
@@ -26,7 +26,7 @@
 </div>
 
 <div class="modal-bg" id="jMod">
-    <div class="modal">
+    <div class="modal-box">
         <div class="modal-head"><span><i class="bi bi-calendar-range"></i> Asignar jornada</span><button class="modal-x" onclick="document.getElementById('jMod').classList.remove('open')">✕</button></div>
         <form style="padding:1.4rem;display:flex;flex-direction:column;gap:.85rem;" onsubmit="saveJ(event)">
             <div><label class="lbl">Empleado *</label><select id="j_emp" class="inp" required>

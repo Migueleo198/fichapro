@@ -49,7 +49,7 @@ $totalPend = (int)$pendientes['vacaciones'] + (int)$pendientes['ausencias'] + (i
             <tbody>
             <?php foreach ($trabajando as $t): ?>
             <tr>
-                <td style="font-weight:800;color:#0A2E4E;"><?= e($t['nombre'].' '.$t['apellidos']) ?></td>
+                <td style="font-weight:800;color:#1E3A8A;"><?= e($t['nombre'].' '.$t['apellidos']) ?></td>
                 <td><?= hhmm($t['hora_entrada']) ?> h</td>
                 <td><?= $t['en_descanso'] ? badge('En descanso','#fff7ed','#c2410c') : badge('Trabajando','#dcfce7','#166534') ?></td>
             </tr>
@@ -71,8 +71,8 @@ $totalPend = (int)$pendientes['vacaciones'] + (int)$pendientes['ausencias'] + (i
             ];
             foreach ($rows as [$k,$ic,$lbl,$n]): ?>
             <a href="<?= url($k) ?>" style="display:flex;align-items:center;gap:.8rem;padding:.7rem 1.25rem;text-decoration:none;border-top:1px solid #f1f5f9;">
-                <div style="width:2.1rem;height:2.1rem;border-radius:9px;background:#e8f9f8;color:#3EC6C1;display:flex;align-items:center;justify-content:center;"><i class="bi <?= $ic ?>"></i></div>
-                <span style="flex:1;font-weight:700;color:#0A2E4E;font-size:.88rem;"><?= $lbl ?></span>
+                <div style="width:2.1rem;height:2.1rem;border-radius:9px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;"><i class="bi <?= $ic ?>"></i></div>
+                <span style="flex:1;font-weight:700;color:#1E3A8A;font-size:.88rem;"><?= $lbl ?></span>
                 <?php if ($n>0): ?>
                 <span style="background:#ef4444;color:#fff;font-size:.72rem;font-weight:800;padding:2px 9px;border-radius:99px;"><?= $n ?></span>
                 <?php else: ?>

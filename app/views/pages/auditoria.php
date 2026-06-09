@@ -13,7 +13,7 @@
         <tr>
             <td style="white-space:nowrap;font-weight:700;"><?= date('d/m/Y H:i', strtotime($a['fecha'])) ?></td>
             <td><?= $a['nombre'] ? e($a['nombre'].' '.$a['apellidos']) : '<span class="muted">Sistema</span>' ?></td>
-            <td><?= badge($a['accion'],'#e0f9f8','#0A2E4E') ?></td>
+            <td><?= badge($a['accion'],'#EFF6FF','#1E3A8A') ?></td>
             <td class="mid" style="font-family:monospace;font-size:.78rem;"><?= e($a['tabla']) ?></td>
             <td class="mid" style="font-size:.82rem;"><?= e($a['detalle']) ?: '—' ?></td>
         </tr>

@@ -5,7 +5,23 @@
         <h1 class="page-title">Empleados</h1>
         <p class="muted" style="font-weight:600;margin:.3rem 0 0;">Altas, roles y acceso al sistema</p>
     </div>
-    <button onclick="openEmp()" class="btn btn-teal"><i class="bi bi-person-plus"></i> Nuevo empleado</button>
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button type="button" class="btn btn-ghost" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                <i class="bi bi-funnel"></i> Filtros <span class="filtro-dot" data-fp-dot style="display:none;"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end fp-filtros" data-fp-target="#empBody">
+                <label class="lbl">Buscar</label>
+                <input class="inp mb-2" data-fp-key="search" placeholder="Nombre, usuario, DNI, email…">
+                <label class="lbl">Rol</label>
+                <select class="inp mb-2" data-fp-key="rol" data-fp-mode="eq"><option value="">Todos</option><option value="admin">Administrador</option><option value="trabajador">Trabajador</option></select>
+                <label class="lbl">Estado</label>
+                <select class="inp mb-3" data-fp-key="estado" data-fp-mode="eq"><option value="">Todos</option><option value="1">Activo</option><option value="0">Inactivo</option></select>
+                <button type="button" class="btn btn-ghost w-100" style="justify-content:center;" data-fp-clear><i class="bi bi-x-circle"></i> Limpiar</button>
+            </div>
+        </div>
+        <button onclick="openEmp()" class="btn btn-teal"><i class="bi bi-person-plus"></i> Nuevo empleado</button>
+    </div>
 </div>
 
 <div class="card">
@@ -16,14 +32,16 @@
     <div style="overflow-x:auto;">
     <table class="tbl">
         <thead><tr><th>Empleado</th><th>DNI</th><th>Contacto</th><th>Rol</th><th>Estado</th><th></th></tr></thead>
-        <tbody>
+        <tbody id="empBody">
         <?php foreach ($empleados as $e): ?>
-        <tr id="emp-<?= $e['id'] ?>">
+        <tr id="emp-<?= $e['id'] ?>" data-row
+            data-search="<?= e(strtolower($e['nombre'].' '.$e['apellidos'].' '.$e['usuario'].' '.$e['dni'].' '.$e['email'])) ?>"
+            data-rol="<?= e($e['rol']) ?>" data-estado="<?= (int)$e['activo'] ?>">
             <td>
                 <div style="display:flex;align-items:center;gap:.7rem;">
-                    <div style="width:2.1rem;height:2.1rem;border-radius:50%;background:<?= $e['rol']==='admin'?'#0A2E4E':'#3EC6C1' ?>;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0;"><?= strtoupper(mb_substr($e['nombre'],0,1)) ?></div>
+                    <div style="width:2.1rem;height:2.1rem;border-radius:50%;background:<?= $e['rol']==='admin'?'#1E3A8A':'#2563EB' ?>;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0;"><?= strtoupper(mb_substr($e['nombre'],0,1)) ?></div>
                     <div>
-                        <div style="font-weight:800;color:#0A2E4E;"><?= e($e['nombre'].' '.$e['apellidos']) ?><?= $e['id']==$yo?' <span class="muted" style="font-size:.7rem;">(tú)</span>':'' ?></div>
+                        <div style="font-weight:800;color:#1E3A8A;"><?= e($e['nombre'].' '.$e['apellidos']) ?><?= $e['id']==$yo?' <span class="muted" style="font-size:.7rem;">(tú)</span>':'' ?></div>
                         <div class="muted" style="font-size:.76rem;">@<?= e($e['usuario']) ?></div>
                     </div>
                 </div>
@@ -49,7 +67,7 @@
 
 <!-- modal -->
 <div class="modal-bg" id="empModal">
-    <div class="modal">
+    <div class="modal-box">
         <div class="modal-head"><span id="empTitle"><i class="bi bi-person-plus"></i> Nuevo empleado</span><button class="modal-x" onclick="closeEmp()">✕</button></div>
         <form id="empForm" style="padding:1.4rem;display:flex;flex-direction:column;gap:.85rem;" onsubmit="saveEmp(event)">
             <input type="hidden" id="e_id">
@@ -70,7 +88,7 @@
                 <div><label class="lbl">Rol *</label><select id="e_rol" class="inp"><option value="trabajador">Trabajador</option><option value="admin">Administrador</option></select></div>
                 <div><label class="lbl" id="pwLabel">Contraseña *</label><input id="e_password" type="password" class="inp"><div id="pwHint" class="muted" style="font-size:.7rem;margin-top:.2rem;display:none;">Vacío = mantener actual</div></div>
             </div>
-            <div id="activoRow" style="display:none;"><label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-weight:700;color:#0A2E4E;font-size:.85rem;"><input type="checkbox" id="e_activo" style="width:1.1rem;height:1.1rem;accent-color:#3EC6C1;"> Cuenta activa</label></div>
+            <div id="activoRow" style="display:none;"><label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-weight:700;color:#1E3A8A;font-size:.85rem;"><input type="checkbox" id="e_activo" style="width:1.1rem;height:1.1rem;accent-color:#2563EB;"> Cuenta activa</label></div>
             <div id="empErr" style="display:none;padding:.6rem .8rem;border-radius:9px;background:#fff5f5;border:1px solid #fecaca;color:#dc2626;font-size:.82rem;font-weight:700;"></div>
             <div style="display:flex;gap:.5rem;margin-top:.25rem;">
                 <button type="submit" class="btn btn-teal" style="flex:1;justify-content:center;"><i class="bi bi-check-circle"></i> <span id="empBtn">Crear</span></button>

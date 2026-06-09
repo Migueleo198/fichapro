@@ -11,8 +11,8 @@
         <tbody>
         <?php foreach ($lista as $v): ?>
         <tr id="vh-<?= $v['id'] ?>">
-            <td style="font-weight:800;color:#0A2E4E;"><?= e($v['nombre'].' '.$v['apellidos']) ?></td>
-            <td><span style="font-family:monospace;font-weight:800;background:#0A2E4E;color:#fff;padding:2px 8px;border-radius:6px;letter-spacing:1px;"><?= e($v['matricula']) ?></span></td>
+            <td style="font-weight:800;color:#1E3A8A;"><?= e($v['nombre'].' '.$v['apellidos']) ?></td>
+            <td><span style="font-family:monospace;font-weight:800;background:#1E3A8A;color:#fff;padding:2px 8px;border-radius:6px;letter-spacing:1px;"><?= e($v['matricula']) ?></span></td>
             <td><?= e($v['marca']) ?: '—' ?></td>
             <td><?= e($v['modelo']) ?: '—' ?></td>
             <td><?= e($v['color']) ?: '—' ?></td>
@@ -26,7 +26,7 @@
 </div>
 
 <div class="modal-bg" id="vhMod">
-    <div class="modal">
+    <div class="modal-box">
         <div class="modal-head"><span><i class="bi bi-car-front"></i> Añadir vehículo</span><button class="modal-x" onclick="document.getElementById('vhMod').classList.remove('open')">✕</button></div>
         <form style="padding:1.4rem;display:flex;flex-direction:column;gap:.85rem;" onsubmit="saveVh(event)">
             <div><label class="lbl">Empleado *</label><select id="vh_emp" class="inp" required><option value="">Selecciona…</option>

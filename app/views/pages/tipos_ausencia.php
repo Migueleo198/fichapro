@@ -14,8 +14,8 @@
         <tbody>
         <?php foreach ($tipos as $t): ?>
         <tr id="t-<?= $t['id'] ?>">
-            <td style="font-weight:800;color:#0A2E4E;"><?= e($t['nombre']) ?><?php if($t['descripcion']):?><br><span class="muted" style="font-size:.76rem;font-weight:400;"><?= e($t['descripcion']) ?></span><?php endif;?></td>
-            <td><?= badge(ucfirst($t['tipo']),'#e0f9f8','#0A2E4E') ?></td>
+            <td style="font-weight:800;color:#1E3A8A;"><?= e($t['nombre']) ?><?php if($t['descripcion']):?><br><span class="muted" style="font-size:.76rem;font-weight:400;"><?= e($t['descripcion']) ?></span><?php endif;?></td>
+            <td><?= badge(ucfirst($t['tipo']),'#EFF6FF','#1E3A8A') ?></td>
             <td><?= $t['remunerada'] ? badge('Sí','#dcfce7','#166534') : badge('No','#f1f5f9','#94a3b8') ?></td>
             <td><?= (int)$t['dias_estimados'] ?></td>
             <td><?= $t['activo'] ? badge('Activo','#dcfce7','#166534') : badge('Inactivo','#f1f5f9','#94a3b8') ?></td>
@@ -28,7 +28,7 @@
 </div>
 
 <div class="modal-bg" id="tMod">
-    <div class="modal">
+    <div class="modal-box">
         <div class="modal-head"><span><i class="bi bi-tags"></i> Nuevo tipo</span><button class="modal-x" onclick="document.getElementById('tMod').classList.remove('open')">✕</button></div>
         <form style="padding:1.4rem;display:flex;flex-direction:column;gap:.85rem;" onsubmit="saveT(event)">
             <div><label class="lbl">Nombre *</label><input id="t_nombre" class="inp" required></div>

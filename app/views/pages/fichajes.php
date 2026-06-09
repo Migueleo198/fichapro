@@ -3,21 +3,30 @@
         <h1 class="page-title">Fichajes</h1>
         <p class="muted" style="font-weight:600;margin:.3rem 0 0;">Registro de entradas y salidas</p>
     </div>
-    <a href="<?= url('informes?desde='.$f['desde'].'&hasta='.$f['hasta']) ?>" class="btn btn-ghost"><i class="bi bi-bar-chart-line"></i> Ver informes</a>
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button type="button" class="btn btn-ghost" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                <i class="bi bi-funnel"></i> Filtros<?php if($f['empleado']||$f['estado']): ?><span class="filtro-dot"></span><?php endif; ?>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end fp-filtros" style="width:320px;">
+                <form method="GET" action="<?= url('fichajes') ?>">
+                    <label class="lbl">Empleado</label>
+                    <select name="empleado" class="inp mb-2"><option value="">Todos</option>
+                    <?php foreach ($empleados as $e): ?><option value="<?= $e['id'] ?>" <?= $f['empleado']==$e['id']?'selected':'' ?>><?= e($e['nombre'].' '.$e['apellidos']) ?></option><?php endforeach; ?>
+                    </select>
+                    <label class="lbl">Desde</label><input type="date" name="desde" value="<?= e($f['desde']) ?>" class="inp mb-2">
+                    <label class="lbl">Hasta</label><input type="date" name="hasta" value="<?= e($f['hasta']) ?>" class="inp mb-2">
+                    <label class="lbl">Estado</label>
+                    <select name="estado" class="inp mb-3"><option value="">Todos</option>
+                    <?php foreach (['abierto','cerrado','incidencia','validado'] as $es): ?><option <?= $f['estado']==$es?'selected':'' ?>><?= $es ?></option><?php endforeach; ?>
+                    </select>
+                    <button class="btn btn-teal w-100" style="justify-content:center;"><i class="bi bi-funnel me-1"></i>Aplicar</button>
+                </form>
+            </div>
+        </div>
+        <a href="<?= url('informes?desde='.$f['desde'].'&hasta='.$f['hasta']) ?>" class="btn btn-ghost"><i class="bi bi-bar-chart-line"></i> Ver informes</a>
+    </div>
 </div>
-
-<form method="GET" action="<?= url('fichajes') ?>" class="card" style="padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
-    <div style="flex:1;min-width:150px;"><label class="lbl">Empleado</label>
-        <select name="empleado" class="inp"><option value="">Todos</option>
-        <?php foreach ($empleados as $e): ?><option value="<?= $e['id'] ?>" <?= $f['empleado']==$e['id']?'selected':'' ?>><?= e($e['nombre'].' '.$e['apellidos']) ?></option><?php endforeach; ?>
-        </select></div>
-    <div><label class="lbl">Desde</label><input type="date" name="desde" value="<?= e($f['desde']) ?>" class="inp"></div>
-    <div><label class="lbl">Hasta</label><input type="date" name="hasta" value="<?= e($f['hasta']) ?>" class="inp"></div>
-    <div><label class="lbl">Estado</label><select name="estado" class="inp"><option value="">Todos</option>
-        <?php foreach (['abierto','cerrado','incidencia','validado'] as $es): ?><option <?= $f['estado']==$es?'selected':'' ?>><?= $es ?></option><?php endforeach; ?>
-        </select></div>
-    <button class="btn btn-teal"><i class="bi bi-search"></i> Filtrar</button>
-</form>
 
 <div class="card">
     <div class="card-head" style="justify-content:space-between;"><span><i class="bi bi-calendar2-check teal"></i> Registros</span><span class="muted" style="font-size:.75rem;font-weight:700;"><?= count($lista) ?></span></div>
@@ -27,7 +36,7 @@
         <tbody>
         <?php foreach ($lista as $r): ?>
         <tr id="fi-<?= $r['id'] ?>">
-            <td style="font-weight:800;color:#0A2E4E;white-space:nowrap;"><?= fechaLarga($r['fecha']) ?></td>
+            <td style="font-weight:800;color:#1E3A8A;white-space:nowrap;"><?= fechaLarga($r['fecha']) ?></td>
             <td><?= e($r['nombre'].' '.$r['apellidos']) ?></td>
             <td><?= hhmm($r['hora_entrada']) ?></td>
             <td><?= hhmm($r['hora_salida']) ?></td>

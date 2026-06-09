@@ -16,7 +16,11 @@ Construida desde cero con **PHP (MVC propio) + MariaDB/MySQL**, sin frameworks e
 - **Informes** — horas por empleado y por día, con exportación a **PDF**.
 - **Ajustes** — parámetros de empresa (nombre, hora de inicio, umbral de retraso…).
 - **Auditoría** — registro de actividad.
-- **Diseño responsive** (navy + teal) adaptado a móvil y escritorio.
+- **Inicio por rol** — panel de administrador (KPIs y pendientes) y panel de empleado con sus fichajes y alta/consulta de incidencias.
+- **Estadísticas** — paneles de resumen, fichajes, horas, retrasos y actividad con gráficos (Chart.js).
+- **Perfil de usuario** — edición de datos personales y cambio de contraseña desde un modal.
+- **Filtros** — búsqueda y filtrado de cada listado en un panel desplegable.
+- **Diseño responsive moderno** (blanco + azul, tipografía Inter) adaptado a móvil y escritorio.
 
 ## Requisitos
 

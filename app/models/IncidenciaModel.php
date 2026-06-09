@@ -37,6 +37,23 @@ class IncidenciaModel {
         return $stmt->fetchAll();
     }
 
+    /** Incidencias de un fichaje concreto. */
+    public function getByFichaje(int $idFichaje): array {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM incidencias WHERE id_fichaje = ? ORDER BY created_at DESC"
+        );
+        $stmt->execute([$idFichaje]);
+        return $stmt->fetchAll();
+    }
+
+    /** Empleado dueño de un fichaje (para comprobar permisos), o null. */
+    public function fichajeDe(int $idFichaje): ?int {
+        $stmt = $this->db->prepare("SELECT id_empleado FROM fichajes WHERE id = ?");
+        $stmt->execute([$idFichaje]);
+        $v = $stmt->fetchColumn();
+        return $v !== false ? (int)$v : null;
+    }
+
     public function crear(int $idFichaje, string $mensaje): int {
         // mark the related fichaje as having an incidence
         $this->db->prepare("UPDATE fichajes SET estado='incidencia' WHERE id=? AND estado!='validado'")->execute([$idFichaje]);

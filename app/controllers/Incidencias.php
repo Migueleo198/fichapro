@@ -24,6 +24,18 @@ class Incidencias extends Controller {
         $this->json(['success' => true]);
     }
 
+    /** JSON: incidencias de un fichaje (para el modal "Ver incidencias"). */
+    public function porFichaje($id) {
+        header('Content-Type: application/json; charset=utf-8');
+        $m  = $this->model('IncidenciaModel');
+        $id = (int)$id;
+        if (!isAdmin() && $m->fichajeDe($id) !== currentEmpId()) {
+            echo json_encode(['success' => false, 'items' => []]); exit;
+        }
+        echo json_encode(['success' => true, 'items' => $m->getByFichaje($id)]);
+        exit;
+    }
+
     public function responder($id) {
         requireAdmin();
         $d = $this->input();
