@@ -1,0 +1,5 @@
+/vendor/
+*.log
+.DS_Store
+Thumbs.db
+/app/config/config.local.php
