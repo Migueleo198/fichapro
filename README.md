@@ -44,7 +44,7 @@ Con el `DocumentRoot` apuntando a `public/`, accede a la app y entra con el usua
 |---------|-----------|-----|
 | `admin` | `admin123` | Administrador |
 
-> ⚠️ Cambia la contraseña del admin tras el primer acceso.
+
 
 ## Estructura
 
