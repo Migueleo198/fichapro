@@ -139,9 +139,7 @@ function fpActive(string $key): string {
         <!-- user (clic → modal perfil) -->
         <div class="sidebar-user" onclick="abrirPerfil()" title="Ver mi perfil"
              style="display:flex;align-items:center;gap:.55rem;padding:.45rem .5rem;border-radius:9px;background:rgba(255,255,255,.08);margin-bottom:.25rem;">
-            <div style="width:1.95rem;height:1.95rem;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;">
-                <?= strtoupper(mb_substr($_SESSION['emp_nombre'] ?? 'U', 0, 1)) ?>
-            </div>
+            <?= avatarHtml(avatarUrl(), $_SESSION['emp_nombre'] ?? 'U', 1.95, 0.72) ?>
             <div style="overflow:hidden;flex:1;">
                 <div style="color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= e($_SESSION['emp_nombre'] ?? 'Usuario') ?></div>
                 <div style="color:rgba(255,255,255,.5);font-size:.66rem;text-transform:capitalize;"><?= e($_SESSION['emp_rol'] ?? '') ?></div>
@@ -165,7 +163,7 @@ function fpActive(string $key): string {
     <div style="width:2.3rem;"></div>
 </nav>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" style="background:linear-gradient(190deg,#1E3A8A 0%,#172554 100%);width:264px;">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" style="background:linear-gradient(195deg,#1A649C 0%,#1E3A8A 100%);width:264px;">
     <div class="offcanvas-header" style="border-bottom:1px solid rgba(255,255,255,.1);">
         <div class="sidebar-brand" style="border:none;padding:0;">
             <div class="sidebar-logo"><i class="bi bi-stopwatch-fill"></i></div>
@@ -255,10 +253,18 @@ function fpActive(string $key): string {
             <div class="modal-body" style="padding:1.3rem;">
                 <div id="perfilMsg" class="cfg-alert" style="display:none;"></div>
                 <div style="display:flex;align-items:center;gap:.85rem;margin-bottom:1.2rem;">
-                    <div id="perfilAvatar" style="width:3rem;height:3rem;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;flex-shrink:0;">U</div>
-                    <div>
+                    <div style="position:relative;flex-shrink:0;">
+                        <div id="perfilAvatar" style="width:3.4rem;height:3.4rem;border-radius:50%;background:#1A649C;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;overflow:hidden;background-size:cover;background-position:center;">U</div>
+                        <button type="button" onclick="document.getElementById('perfilFoto').click()" title="Cambiar foto"
+                            style="position:absolute;right:-3px;bottom:-3px;width:1.4rem;height:1.4rem;border-radius:50%;background:#1A649C;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;cursor:pointer;padding:0;line-height:1;">
+                            <i class="bi bi-camera-fill"></i>
+                        </button>
+                        <input type="file" id="perfilFoto" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;">
+                    </div>
+                    <div style="min-width:0;">
                         <div id="perfilNombreBig" style="font-weight:800;color:var(--text);font-size:1rem;line-height:1.2;">—</div>
                         <div id="perfilRolTxt" class="muted" style="font-size:.8rem;">—</div>
+                        <a href="javascript:void(0)" id="perfilQuitarFoto" onclick="quitarFotoPerfil()" style="display:none;font-size:.72rem;color:#dc2626;font-weight:600;">Quitar foto</a>
                     </div>
                 </div>
                 <form id="perfilForm">
@@ -284,7 +290,7 @@ function fpActive(string $key): string {
 <script>
 (function(){
     const NOTIF_COLORS={danger:'#FEF2F2',warning:'#FFF7ED',success:'#F0FDF4',primary:'#EFF6FF'};
-    const NOTIF_TEXT  ={danger:'#B91C1C',warning:'#C2410C',success:'#15803D',primary:'#1D4ED8'};
+    const NOTIF_TEXT  ={danger:'#B91C1C',warning:'#C2410C',success:'#15803D',primary:'#1A649C'};
 
     function loadNotificaciones(){
         if(typeof BASE==='undefined') return;
@@ -334,10 +340,63 @@ function fpActive(string $key): string {
             document.getElementById('perfilDni').value=u.dni||'';
             document.getElementById('perfilNombreBig').textContent=((u.nombre||'')+' '+(u.apellidos||'')).trim();
             document.getElementById('perfilRolTxt').textContent=u.rol==='admin'?'Administrador':'Trabajador';
-            document.getElementById('perfilAvatar').textContent=(u.nombre||'U').charAt(0).toUpperCase();
+            setPerfilAvatar(u.foto_url, u.nombre);
             const msg=document.getElementById('perfilMsg'); if(msg) msg.style.display='none';
             bootstrap.Modal.getOrCreateInstance(document.getElementById('perfilModal')).show();
         }).catch(()=>{});
+    };
+
+    // Pinta el avatar del modal con foto o inicial, y muestra/oculta "Quitar foto".
+    function setPerfilAvatar(fotoUrl, nombre){
+        const av=document.getElementById('perfilAvatar');
+        const quitar=document.getElementById('perfilQuitarFoto');
+        if(!av) return;
+        if(fotoUrl){
+            av.style.backgroundImage='url("'+fotoUrl+'")';
+            av.textContent='';
+            if(quitar) quitar.style.display='inline';
+        }else{
+            av.style.backgroundImage='none';
+            av.textContent=(nombre||'U').charAt(0).toUpperCase();
+            if(quitar) quitar.style.display='none';
+        }
+    }
+
+    function perfilFotoMsg(html, ok){
+        const msg=document.getElementById('perfilMsg');
+        if(!msg) return;
+        msg.style.display='';
+        msg.className='cfg-alert '+(ok===null?'':(ok?'cfg-alert-ok':'cfg-alert-err'));
+        msg.innerHTML=html;
+    }
+
+    // Subir foto al elegir archivo
+    document.addEventListener('DOMContentLoaded',function(){
+        const inp=document.getElementById('perfilFoto');
+        if(!inp) return;
+        inp.addEventListener('change',async function(){
+            if(!this.files||!this.files[0]) return;
+            perfilFotoMsg('<i class="bi bi-hourglass-split"></i> Subiendo foto…',null);
+            const fd=new FormData(); fd.append('foto',this.files[0]);
+            try{
+                const res=await fetch(BASE+'/ajustes/subirFoto',{method:'POST',body:fd});
+                const d=await res.json();
+                perfilFotoMsg('<i class="bi bi-'+(d.success?'check-circle-fill':'exclamation-triangle-fill')+'"></i> '+(d.message||(d.success?'Foto actualizada':'Error')), d.success);
+                if(d.success){ setPerfilAvatar(d.foto, ''); setTimeout(()=>location.reload(),800); }
+            }catch{ perfilFotoMsg('<i class="bi bi-exclamation-triangle-fill"></i> Error de conexión.',false); }
+            finally{ this.value=''; }
+        });
+    });
+
+    // Quitar foto
+    window.quitarFotoPerfil=async function(){
+        if(!confirm('¿Quitar tu foto de perfil?')) return;
+        try{
+            const res=await fetch(BASE+'/ajustes/eliminarFoto',{method:'POST'});
+            const d=await res.json();
+            perfilFotoMsg('<i class="bi bi-'+(d.success?'check-circle-fill':'exclamation-triangle-fill')+'"></i> '+(d.message||''), d.success);
+            if(d.success) setTimeout(()=>location.reload(),700);
+        }catch{ perfilFotoMsg('<i class="bi bi-exclamation-triangle-fill"></i> Error de conexión.',false); }
     };
     document.addEventListener('DOMContentLoaded',function(){
         const f=document.getElementById('perfilForm');

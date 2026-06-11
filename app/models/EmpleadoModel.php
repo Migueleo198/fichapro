@@ -66,6 +66,11 @@ class EmpleadoModel {
                         ->execute([password_hash($password, PASSWORD_DEFAULT), $id]);
     }
 
+    /** Actualiza (o limpia con null) la ruta de la foto de perfil. */
+    public function actualizarFoto(int $id, ?string $ruta): bool {
+        return $this->db->prepare("UPDATE empleados SET foto=? WHERE id=?")->execute([$ruta, $id]);
+    }
+
     /** Actualiza sólo los datos de perfil del propio usuario (sin rol ni activo). */
     public function actualizarPerfil(int $id, array $d): bool {
         $stmt = $this->db->prepare(

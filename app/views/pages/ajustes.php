@@ -159,7 +159,7 @@ $limite     = date('H:i', strtotime($horaInicio . ' +' . $umbral . ' minutes'));
 
         <div class="col-lg-6">
             <div class="card h-100">
-                <div class="card-head"><i class="bi bi-calendar-check" style="color:#2563EB;"></i> Valores por defecto</div>
+                <div class="card-head"><i class="bi bi-calendar-check" style="color:#1A649C;"></i> Valores por defecto</div>
                 <div style="padding:1.4rem;">
                     <div class="row g-3">
                         <div class="col-6"><label class="lbl">Horas / día</label><input type="number" name="horas_jornada_defecto" class="inp" min="0" max="24" step="0.5" value="<?= e($config['horas_jornada_defecto'] ?? '7.5') ?>" required></div>
@@ -181,6 +181,33 @@ $limite     = date('H:i', strtotime($horaInicio . ' +' . $umbral . ' minutes'));
                         <div class="cfg-formula-row cfg-formula-total"><span>Límite puntualidad</span><strong style="color:#dc2626;"><?= $limite ?></strong></div>
                     </div>
                     <p class="muted" style="font-size:.78rem;margin:.8rem 0 0;">Fichajes antes de las <?= $limite ?> no cuentan como retraso.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORREO / SMTP -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-head"><i class="bi bi-envelope-at" style="color:#1A649C;"></i> Correo (SMTP) para informes</div>
+                <div style="padding:1.4rem;">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="lbl">Servidor SMTP</label><input name="smtp_host" class="inp" value="<?= e($config['smtp_host'] ?? 'smtp.gmail.com') ?>" placeholder="smtp.gmail.com"></div>
+                        <div class="col-md-3"><label class="lbl">Puerto</label><input type="number" name="smtp_port" class="inp" value="<?= e($config['smtp_port'] ?? '587') ?>" placeholder="587"></div>
+                        <div class="col-md-3"><label class="lbl">Cifrado</label>
+                            <select name="smtp_secure" class="inp">
+                                <option value="tls" <?= ($config['smtp_secure'] ?? 'tls')==='tls'?'selected':'' ?>>TLS (587)</option>
+                                <option value="ssl" <?= ($config['smtp_secure'] ?? '')==='ssl'?'selected':'' ?>>SSL (465)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6"><label class="lbl">Usuario / correo remitente</label><input type="email" name="smtp_user" class="inp" value="<?= e($config['smtp_user'] ?? '') ?>" placeholder="tu-cuenta@gmail.com"></div>
+                        <div class="col-md-6"><label class="lbl">Contraseña de aplicación</label><input type="password" name="smtp_pass" class="inp" placeholder="<?= ($config['smtp_pass'] ?? '')!=='' ? '•••••••• (sin cambios)' : 'contraseña de aplicación' ?>" autocomplete="new-password"></div>
+                        <div class="col-md-6"><label class="lbl">Nombre del remitente</label><input name="smtp_from_name" class="inp" value="<?= e($config['smtp_from_name'] ?? 'FichaPro') ?>" placeholder="FichaPro"></div>
+                    </div>
+                    <p class="muted" style="font-size:.78rem;margin:.8rem 0 0;">
+                        <i class="bi bi-info-circle"></i> Con Gmail usa una <strong>contraseña de aplicación</strong> (no la del correo). Deja la contraseña en blanco para conservar la guardada.
+                        Los informes <strong>semanales</strong> y <strong>mensuales</strong> se programan con el Programador de tareas de Windows ejecutando
+                        <code>php app/services/enviar_informes_semanal.php</code> y <code>…_mensual.php</code>.
+                    </p>
                 </div>
             </div>
         </div>
@@ -256,7 +283,7 @@ const pn=document.getElementById('passNueva');
 if(pn){pn.addEventListener('input',()=>{
     const v=pn.value;let s=0;
     if(v.length>=6)s++; if(v.length>=10)s++; if(/[A-Z]/.test(v))s++; if(/[0-9]/.test(v))s++; if(/[^A-Za-z0-9]/.test(v))s++;
-    const L=[{p:0,c:'#e5e7eb',t:'—'},{p:20,c:'#ef4444',t:'Muy débil'},{p:40,c:'#f59e0b',t:'Débil'},{p:60,c:'#0ea5e9',t:'Aceptable'},{p:80,c:'#2563EB',t:'Fuerte'},{p:100,c:'#16a34a',t:'Muy fuerte'}][Math.min(s,5)];
+    const L=[{p:0,c:'#e5e7eb',t:'—'},{p:20,c:'#ef4444',t:'Muy débil'},{p:40,c:'#f59e0b',t:'Débil'},{p:60,c:'#0ea5e9',t:'Aceptable'},{p:80,c:'#1A649C',t:'Fuerte'},{p:100,c:'#16a34a',t:'Muy fuerte'}][Math.min(s,5)];
     const bar=document.getElementById('strBar'),lab=document.getElementById('strLabel');
     bar.style.width=L.p+'%';bar.style.background=L.c;lab.textContent=L.t;lab.style.color=L.c;
 });}

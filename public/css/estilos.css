@@ -1,12 +1,12 @@
 /* ============================================================
    FichaPro — 70% Blanco · 20% Azul oscuro #1E3A8A · 10% Estado
-   Acento azul #2563EB · Fondo #F8FAFC · Inter
+   Acento azul #1A649C · Fondo #F8FAFC · Inter
    Se conservan nombres de variables/clases para que las vistas
    adopten el estilo automáticamente.
    ============================================================ */
 :root{
   /* acento (antes teal) → azul */
-  --teal:#2563EB; --teal-dark:#1D4ED8; --teal-bg:#EFF6FF;
+  --teal:#1A649C; --teal-dark:#15527F; --teal-bg:#EFF6FF;
   /* azul oscuro de marca (antes navy) → #1E3A8A (sidebar/header, texto fuerte) */
   --navy:#1E3A8A; --navy-dark:#172554; --navy-mid:#1E40AF;
   /* neutros (slate) */
@@ -15,7 +15,7 @@
   --text:#1E293B; --mid:#475569; --muted:#64748B; --faint:#94A3B8;
   /* estado (10%) — tonos accesibles (mejor contraste con texto blanco) */
   --green:#16A34A; --green-d:#15803D; --red:#EF4444; --red-d:#DC2626; --orange:#D97706;
-  --ring:rgba(37,99,235,.18);
+  --ring:rgba(26,100,156,.18);
   --shadow-sm:0 1px 2px rgba(15,23,42,.05);
   --shadow:0 4px 16px rgba(15,23,42,.06);
   --radius:12px;
@@ -32,10 +32,10 @@ a{color:inherit;text-decoration:none;}
 .main{flex:1;margin-left:248px;min-width:0;padding:2rem 2.25rem;max-width:1400px;}
 
 /* ============================================================
-   SIDEBAR — azul oscuro (#1E3A8A), texto claro, acento azul
+   SIDEBAR — azul royal → navy (#1A649C → #1E3A8A), texto claro, acento azul
    ============================================================ */
 .sidebar{position:fixed;left:0;top:0;height:100vh;width:248px;
-  background:linear-gradient(190deg,#1E3A8A 0%,#172554 100%);
+  background:linear-gradient(195deg,#1A649C 0%,#1E3A8A 100%);
   display:flex;flex-direction:column;z-index:50;overflow:hidden;box-shadow:2px 0 18px rgba(15,23,42,.12);}
 
 .sidebar-brand{display:flex;align-items:center;gap:.7rem;padding:1.1rem 1.1rem .95rem;
@@ -52,9 +52,10 @@ a{color:inherit;text-decoration:none;}
   font-size:.84rem;font-weight:500;color:rgba(255,255,255,.72);transition:background .12s,color .12s;
   cursor:pointer;margin-bottom:1px;}
 .sidebar-link:hover{background:rgba(255,255,255,.09);color:#fff;}
-.sidebar-link.active{background:#2563EB;color:#fff;font-weight:600;box-shadow:0 3px 10px rgba(37,99,235,.4);}
+.sidebar-link.active{background:#fff;color:#1E3A8A;font-weight:700;box-shadow:0 4px 12px rgba(8,18,40,.22);}
 .sidebar-link i{font-size:1rem;width:1.15em;flex-shrink:0;color:inherit;opacity:.85;}
-.sidebar-link.active i,.sidebar-link:hover i{opacity:1;}
+.sidebar-link.active i{color:#1A649C;opacity:1;}
+.sidebar-link:hover i{opacity:1;}
 
 /* padre con hijo activo */
 .sidebar-link.parent-active{background:rgba(255,255,255,.1);color:#fff;font-weight:600;}
@@ -80,7 +81,7 @@ a{color:inherit;text-decoration:none;}
 /* ============================================================
    MOBILE  (topbar = header azul oscuro)
    ============================================================ */
-.mobile-topbar{position:fixed;top:0;left:0;right:0;height:54px;background:#1E3A8A;
+.mobile-topbar{position:fixed;top:0;left:0;right:0;height:54px;background:#1A649C;
   padding:0 1rem;z-index:100;box-shadow:0 2px 10px rgba(15,23,42,.15);}
 @media(min-width:992px){
   .sidebar{display:flex !important;}
@@ -228,12 +229,12 @@ input[type="time"]:focus,input[type="date"]:focus,input[type="number"]:focus{
   font-size:1.15rem;margin-bottom:.5rem;background:var(--teal-bg);color:var(--teal);}
 .kpi-value{font-size:1.7rem;font-weight:800;line-height:1.05;color:var(--text);letter-spacing:-0.03em;font-variant-numeric:tabular-nums;}
 .kpi-label{font-size:.76rem;font-weight:500;color:var(--muted);}
-.kpi-blue   .kpi-icon{background:#EFF6FF;color:#2563EB;}
+.kpi-blue   .kpi-icon{background:#EFF6FF;color:#1A649C;}
 .kpi-green  .kpi-icon{background:#F0FDF4;color:#16A34A;}
 .kpi-purple .kpi-icon{background:#F5F3FF;color:#7C3AED;}
 .kpi-orange .kpi-icon{background:#FFF7ED;color:#EA580C;}
 .kpi-teal   .kpi-icon{background:#ECFEFF;color:#0891B2;}
-.kpi-indigo .kpi-icon{background:#EFF6FF;color:#2563EB;}
+.kpi-indigo .kpi-icon{background:#EFF6FF;color:#1A649C;}
 .kpi-red    .kpi-icon{background:#FEF2F2;color:#DC2626;}
 .kpi-pink   .kpi-icon{background:#FDF2F8;color:#DB2777;}
 .kpi-navy   .kpi-icon{background:#EFF6FF;color:#1E3A8A;}

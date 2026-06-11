@@ -139,7 +139,7 @@ const DR=<?= json_encode(array_map('intval',$diasRet)) ?>;
 const DT=<?= json_encode(array_map('intval',$diasTotal)) ?>;
 const EN=<?= json_encode($empNombres) ?>;
 const ER=<?= json_encode(array_map('intval',$empRetrasos)) ?>;
-const TEAL='#2563EB',NAVY='#1E3A8A';
+const TEAL='#1A649C',NAVY='#1E3A8A';
 
 new Chart(document.getElementById('chartRetrasosDia'),{type:'bar',data:{labels:DL,datasets:[
   {label:'Total fichajes',data:DT,backgroundColor:'rgba(15,23,42,.3)',borderRadius:4},

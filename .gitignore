@@ -3,3 +3,7 @@
 .DS_Store
 Thumbs.db
 /app/config/config.local.php
+
+# Configuración local con secretos (NO subir)
+.env
+!.env.example

@@ -24,8 +24,9 @@ document.addEventListener('click', (e) => {
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fp-filtros[data-fp-target]').forEach(panel => {
-        const tbody = document.querySelector(panel.dataset.fpTarget);
-        if (!tbody) return;
+        // El objetivo puede coincidir con uno o varios <tbody> (p.ej. listas seccionadas).
+        const tbodies = document.querySelectorAll(panel.dataset.fpTarget);
+        if (!tbodies.length) return;
         const controls = panel.querySelectorAll('[data-fp-key]');
         const dot = panel.closest('.dropdown')?.querySelector('[data-fp-dot]');
 
@@ -33,27 +34,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const active = [...controls]
                 .map(c => ({ key: c.dataset.fpKey, mode: c.dataset.fpMode || 'includes', val: (c.value || '').toString().toLowerCase().trim() }))
                 .filter(f => f.val !== '');
-            let visible = 0;
-            tbody.querySelectorAll('tr[data-row]').forEach(tr => {
-                const ok = active.every(f => {
-                    const v = (tr.dataset[f.key] || '').toLowerCase();
-                    return f.mode === 'eq' ? v === f.val : v.includes(f.val);
+
+            tbodies.forEach(tbody => {
+                let visible = 0;
+                tbody.querySelectorAll('tr[data-row]').forEach(tr => {
+                    const ok = active.every(f => {
+                        const v = (tr.dataset[f.key] || '').toLowerCase();
+                        return f.mode === 'eq' ? v === f.val : v.includes(f.val);
+                    });
+                    tr.style.display = ok ? '' : 'none';
+                    if (ok) visible++;
                 });
-                tr.style.display = ok ? '' : 'none';
-                if (ok) visible++;
-            });
-            let nr = tbody.querySelector('.fp-noresult');
-            if (visible === 0) {
-                if (!nr) {
-                    nr = document.createElement('tr');
-                    nr.className = 'fp-noresult';
-                    nr.innerHTML = '<td colspan="100" class="empty">Sin resultados con esos filtros</td>';
-                    tbody.appendChild(nr);
+                const hasRows = tbody.querySelectorAll('tr[data-row]').length > 0;
+                let nr = tbody.querySelector('.fp-noresult');
+                if (visible === 0 && hasRows && active.length) {
+                    if (!nr) {
+                        nr = document.createElement('tr');
+                        nr.className = 'fp-noresult';
+                        nr.innerHTML = '<td colspan="100" class="empty">Sin resultados con esos filtros</td>';
+                        tbody.appendChild(nr);
+                    }
+                    nr.style.display = '';
+                } else if (nr) {
+                    nr.style.display = 'none';
                 }
-                nr.style.display = '';
-            } else if (nr) {
-                nr.style.display = 'none';
-            }
+            });
             if (dot) dot.style.display = active.length ? '' : 'none';
         }
 

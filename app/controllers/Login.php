@@ -25,6 +25,7 @@ class Login extends Controller {
         $_SESSION['emp_id']     = $emp['id'];
         $_SESSION['emp_nombre'] = $emp['nombre'];
         $_SESSION['emp_rol']    = $emp['rol'];
+        $_SESSION['emp_foto']   = $emp['foto'] ?? '';
 
         $this->json(['success' => true, 'redirect' => url($emp['rol'] === 'admin' ? 'home' : 'fichar')]);
     }

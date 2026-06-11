@@ -10,13 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        :root{--blue:#2563EB;--navy:#1E3A8A;--green:#16A34A;--green-d:#15803D;--ink:#1E293B;--mid:#475569;--muted:#64748B;--border:#E2E8F0;--bg:#F8FAFC;}
+        :root{--blue:#1A649C;--navy:#1E3A8A;--green:#16A34A;--green-d:#15803D;--ink:#1E293B;--mid:#475569;--muted:#64748B;--border:#E2E8F0;--bg:#F8FAFC;}
         *,*::before,*::after{box-sizing:border-box;}
         body{font-family:'Inter',system-ui,sans-serif;margin:0;background:var(--bg);min-height:100vh;
             display:flex;align-items:center;justify-content:center;padding:1rem;color:var(--ink);
             letter-spacing:-0.011em;-webkit-font-smoothing:antialiased;}
-        .lg-input:focus{outline:none;border-color:var(--blue) !important;box-shadow:0 0 0 3px rgba(37,99,235,.16) !important;}
-        .iw:focus-within{border-color:var(--blue) !important;box-shadow:0 0 0 3px rgba(37,99,235,.16);}
+        .lg-input:focus{outline:none;border-color:var(--blue) !important;box-shadow:0 0 0 3px rgba(26,100,156,.16) !important;}
+        .iw:focus-within{border-color:var(--blue) !important;box-shadow:0 0 0 3px rgba(26,100,156,.16);}
         .btn-login{transition:all .16s;}
         .btn-login:hover{background:var(--green-d) !important;box-shadow:0 6px 18px rgba(34,197,94,.35) !important;}
         @keyframes spin{to{transform:rotate(360deg);}}
@@ -26,7 +26,7 @@
 <div style="width:100%;max-width:400px;">
     <!-- brand -->
     <div style="text-align:center;margin-bottom:1.6rem;">
-        <div style="width:3.4rem;height:3.4rem;border-radius:15px;background:linear-gradient(135deg,#2563EB,#1E3A8A);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:1.55rem;box-shadow:0 10px 24px rgba(37,99,235,.35);"><i class="bi bi-stopwatch-fill"></i></div>
+        <div style="width:3.4rem;height:3.4rem;border-radius:15px;background:linear-gradient(135deg,#1A649C,#1E3A8A);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:1.55rem;box-shadow:0 10px 24px rgba(26,100,156,.35);"><i class="bi bi-stopwatch-fill"></i></div>
         <h1 style="font-size:1.4rem;font-weight:800;color:var(--ink);margin:.7rem 0 .15rem;letter-spacing:-0.03em;">Ficha<span style="color:var(--blue);">Pro</span></h1>
         <p style="font-size:.82rem;font-weight:500;color:var(--muted);margin:0;">Control horario y gestión de personal</p>
     </div>

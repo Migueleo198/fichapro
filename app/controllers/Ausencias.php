@@ -20,8 +20,14 @@ class Ausencias extends Controller {
         if (empty($d['fecha_inicio'])) {
             $this->json(['success' => false, 'message' => 'Indica al menos la fecha de inicio']);
         }
-        $this->model('AusenciaModel')->crear(currentEmpId(), $d);
-        $this->json(['success' => true]);
+        $r = $this->model('AusenciaModel')->crear(currentEmpId(), $d);
+        $this->json([
+            'success'           => true,
+            'remunerada'        => $r['remunerada'],
+            'limite_superado'   => $r['limite_superado'],
+            'horas'             => $r['horas'],
+            'horas_remuneradas' => $r['horas_remuneradas'],
+        ]);
     }
 
     public function estado($id, $estado) {
@@ -49,6 +55,13 @@ class Ausencias extends Controller {
         if (empty($d['nombre'])) $this->json(['success' => false, 'message' => 'El nombre es obligatorio']);
         $this->model('AusenciaModel')->crearTipo($d);
         $this->json(['success' => true]);
+    }
+
+    public function actualizarLimite($id) {
+        requireAdmin();
+        $d = $this->input();
+        $ok = $this->model('AusenciaModel')->actualizarLimite((int)$id, (int)($d['horas'] ?? 0));
+        $this->json(['success' => (bool)$ok]);
     }
 
     public function eliminarTipo($id) {

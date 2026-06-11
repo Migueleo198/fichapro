@@ -39,7 +39,7 @@
             data-rol="<?= e($e['rol']) ?>" data-estado="<?= (int)$e['activo'] ?>">
             <td>
                 <div style="display:flex;align-items:center;gap:.7rem;">
-                    <div style="width:2.1rem;height:2.1rem;border-radius:50%;background:<?= $e['rol']==='admin'?'#1E3A8A':'#2563EB' ?>;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0;"><?= strtoupper(mb_substr($e['nombre'],0,1)) ?></div>
+                    <div style="width:2.1rem;height:2.1rem;border-radius:50%;background:<?= $e['rol']==='admin'?'#1E3A8A':'#1A649C' ?>;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0;"><?= strtoupper(mb_substr($e['nombre'],0,1)) ?></div>
                     <div>
                         <div style="font-weight:800;color:#1E3A8A;"><?= e($e['nombre'].' '.$e['apellidos']) ?><?= $e['id']==$yo?' <span class="muted" style="font-size:.7rem;">(tú)</span>':'' ?></div>
                         <div class="muted" style="font-size:.76rem;">@<?= e($e['usuario']) ?></div>
@@ -88,7 +88,7 @@
                 <div><label class="lbl">Rol *</label><select id="e_rol" class="inp"><option value="trabajador">Trabajador</option><option value="admin">Administrador</option></select></div>
                 <div><label class="lbl" id="pwLabel">Contraseña *</label><input id="e_password" type="password" class="inp"><div id="pwHint" class="muted" style="font-size:.7rem;margin-top:.2rem;display:none;">Vacío = mantener actual</div></div>
             </div>
-            <div id="activoRow" style="display:none;"><label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-weight:700;color:#1E3A8A;font-size:.85rem;"><input type="checkbox" id="e_activo" style="width:1.1rem;height:1.1rem;accent-color:#2563EB;"> Cuenta activa</label></div>
+            <div id="activoRow" style="display:none;"><label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-weight:700;color:#1E3A8A;font-size:.85rem;"><input type="checkbox" id="e_activo" style="width:1.1rem;height:1.1rem;accent-color:#1A649C;"> Cuenta activa</label></div>
             <div id="empErr" style="display:none;padding:.6rem .8rem;border-radius:9px;background:#fff5f5;border:1px solid #fecaca;color:#dc2626;font-size:.82rem;font-weight:700;"></div>
             <div style="display:flex;gap:.5rem;margin-top:.25rem;">
                 <button type="submit" class="btn btn-teal" style="flex:1;justify-content:center;"><i class="bi bi-check-circle"></i> <span id="empBtn">Crear</span></button>

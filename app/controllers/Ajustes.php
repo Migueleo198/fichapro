@@ -2,6 +2,8 @@
 
 class Ajustes extends Controller {
 
+
+
     /** Todos los usuarios acceden a "Mi cuenta"; las pestañas de admin se protegen aparte. */
     public function __construct() { requireAuth(); }
 
@@ -57,7 +59,63 @@ class Ajustes extends Controller {
         $u = $this->model('EmpleadoModel')->getById(currentEmpId());
         if (!$u) { echo json_encode(['success' => false]); exit; }
         unset($u['password']);
+        $u['foto_url'] = !empty($u['foto']) ? url($u['foto']) : null;
         echo json_encode(['success' => true, 'data' => $u]);
+        exit;
+    }
+
+    // ============================================================
+    // FOTO DE PERFIL — subir / eliminar (AJAX)
+    // ============================================================
+    public function subirFoto() {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (empty($_FILES['foto']) || $_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
+            echo json_encode(['success' => false, 'message' => 'No se recibió ninguna imagen.']); exit;
+        }
+        $f = $_FILES['foto'];
+        if ($f['size'] > 3 * 1024 * 1024) {
+            echo json_encode(['success' => false, 'message' => 'La imagen supera el máximo de 3 MB.']); exit;
+        }
+        $info   = @getimagesize($f['tmp_name']);
+        $extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+        if (!$info || !isset($extMap[$info['mime']])) {
+            echo json_encode(['success' => false, 'message' => 'Formato no válido. Usa JPG, PNG, WEBP o GIF.']); exit;
+        }
+
+        $dir = RUTA_APP . '/../public/uploads/avatars';
+        if (!is_dir($dir) && !@mkdir($dir, 0775, true)) {
+            echo json_encode(['success' => false, 'message' => 'No se pudo crear la carpeta de subidas.']); exit;
+        }
+
+        $nombre = 'emp_' . currentEmpId() . '_' . bin2hex(random_bytes(6)) . '.' . $extMap[$info['mime']];
+        $rel    = 'uploads/avatars/' . $nombre;
+        if (!@move_uploaded_file($f['tmp_name'], $dir . '/' . $nombre)) {
+            echo json_encode(['success' => false, 'message' => 'No se pudo guardar la imagen.']); exit;
+        }
+
+        $emp = $this->model('EmpleadoModel');
+        $old = $emp->getById(currentEmpId())['foto'] ?? null;
+        $emp->actualizarFoto(currentEmpId(), $rel);
+        if ($old && str_starts_with($old, 'uploads/avatars/')) {
+            @unlink(RUTA_APP . '/../public/' . $old);
+        }
+        $_SESSION['emp_foto'] = $rel;
+
+        echo json_encode(['success' => true, 'message' => 'Foto de perfil actualizada.', 'foto' => url($rel)]);
+        exit;
+    }
+
+    public function eliminarFoto() {
+        header('Content-Type: application/json; charset=utf-8');
+        $emp = $this->model('EmpleadoModel');
+        $old = $emp->getById(currentEmpId())['foto'] ?? null;
+        $emp->actualizarFoto(currentEmpId(), null);
+        if ($old && str_starts_with($old, 'uploads/avatars/')) {
+            @unlink(RUTA_APP . '/../public/' . $old);
+        }
+        $_SESSION['emp_foto'] = '';
+        echo json_encode(['success' => true, 'message' => 'Foto eliminada.']);
         exit;
     }
 
@@ -118,13 +176,24 @@ class Ajustes extends Controller {
         requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') redirect('ajustes?tab=sistema');
 
-        $this->model('AjusteModel')->guardar([
+        $valores = [
             'nombre_empresa'         => trim($_POST['nombre_empresa'] ?? ''),
             'hora_inicio_jornada'    => trim($_POST['hora_inicio_jornada'] ?? '08:00'),
             'umbral_retraso_minutos' => (int)   ($_POST['umbral_retraso_minutos'] ?? 30),
             'horas_jornada_defecto'  => (float) ($_POST['horas_jornada_defecto']  ?? 7.5),
             'horas_semana_defecto'   => (float) ($_POST['horas_semana_defecto']   ?? 37.5),
-        ]);
+            'smtp_host'              => trim($_POST['smtp_host'] ?? ''),
+            'smtp_port'             => (int) ($_POST['smtp_port'] ?? 587),
+            'smtp_secure'           => in_array($_POST['smtp_secure'] ?? 'tls', ['tls','ssl'], true) ? $_POST['smtp_secure'] : 'tls',
+            'smtp_user'             => trim($_POST['smtp_user'] ?? ''),
+            'smtp_from_name'        => trim($_POST['smtp_from_name'] ?? 'FichaPro'),
+        ];
+        // La contraseña SMTP sólo se actualiza si se escribe una nueva (no se vacía por error).
+        if (($_POST['smtp_pass'] ?? '') !== '') {
+            $valores['smtp_pass'] = $_POST['smtp_pass'];
+        }
+
+        $this->model('AjusteModel')->guardar($valores);
         redirect('ajustes?tab=sistema&ok=sistema');
     }
 

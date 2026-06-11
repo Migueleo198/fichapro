@@ -133,12 +133,12 @@ const DF=<?= json_encode(array_map('intval',$diasFich)) ?>;
 const HL=<?= json_encode($horasLabels) ?>;
 const HD=<?= json_encode($horasData) ?>;
 const maxH=Math.max(<?= $maxHoraEntradas ?>,1);
-const TEAL='#2563EB',NAVY='#1E3A8A';
+const TEAL='#1A649C',NAVY='#1E3A8A';
 
 new Chart(document.getElementById('chartActDiaria'),{type:'line',data:{labels:DL,datasets:[
   {label:'Empleados activos',data:DE,borderColor:NAVY,backgroundColor:'rgba(15,23,42,.08)',tension:.4,fill:true,pointRadius:3,borderWidth:2},
-  {label:'Fichajes',data:DF,borderColor:TEAL,backgroundColor:'rgba(37,99,235,.08)',tension:.4,fill:true,pointRadius:3,yAxisID:'yF',borderWidth:2},
+  {label:'Fichajes',data:DF,borderColor:TEAL,backgroundColor:'rgba(26,100,156,.08)',tension:.4,fill:true,pointRadius:3,yAxisID:'yF',borderWidth:2},
 ]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,title:{display:true,text:'Empleados'}},yF:{beginAtZero:true,position:'right',title:{display:true,text:'Fichajes'},grid:{drawOnChartArea:false}}}}});
 
-new Chart(document.getElementById('chartHoraEntrada'),{type:'bar',data:{labels:HL,datasets:[{label:'Entradas',data:HD,backgroundColor:HD.map(v=>{ const i=v/maxH; return `rgba(37,99,235,${0.2+i*0.8})`; }),borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'Nº entradas'}}}}});
+new Chart(document.getElementById('chartHoraEntrada'),{type:'bar',data:{labels:HL,datasets:[{label:'Entradas',data:HD,backgroundColor:HD.map(v=>{ const i=v/maxH; return `rgba(26,100,156,${0.2+i*0.8})`; }),borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'Nº entradas'}}}}});
 </script>

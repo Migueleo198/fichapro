@@ -71,7 +71,7 @@ $totalPend = (int)$pendientes['vacaciones'] + (int)$pendientes['ausencias'] + (i
             ];
             foreach ($rows as [$k,$ic,$lbl,$n]): ?>
             <a href="<?= url($k) ?>" style="display:flex;align-items:center;gap:.8rem;padding:.7rem 1.25rem;text-decoration:none;border-top:1px solid #f1f5f9;">
-                <div style="width:2.1rem;height:2.1rem;border-radius:9px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;"><i class="bi <?= $ic ?>"></i></div>
+                <div style="width:2.1rem;height:2.1rem;border-radius:9px;background:#EFF6FF;color:#1A649C;display:flex;align-items:center;justify-content:center;"><i class="bi <?= $ic ?>"></i></div>
                 <span style="flex:1;font-weight:700;color:#1E3A8A;font-size:.88rem;"><?= $lbl ?></span>
                 <?php if ($n>0): ?>
                 <span style="background:#ef4444;color:#fff;font-size:.72rem;font-weight:800;padding:2px 9px;border-radius:99px;"><?= $n ?></span>

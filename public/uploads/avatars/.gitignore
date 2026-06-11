@@ -1,0 +1,3 @@
+# Las fotos subidas no se versionan; se conserva solo la carpeta
+*
+!.gitignore

@@ -18,7 +18,7 @@ async function api(path, body){
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= url('js/app.js') ?>"></script>
+<script src="<?= url('js/app.js') ?>?v=<?= @filemtime(RUTA_APP . '/../public/js/app.js') ?: '1' ?>"></script>
 </body>
 </html>
 

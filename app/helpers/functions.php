@@ -105,8 +105,38 @@ function estadoSolicitudBadge(string $estado): string {
 
 function rolBadge(string $rol): string {
     return $rol === 'admin'
-        ? badge('Administrador', '#0A2E4E', '#fff')
-        : badge('Trabajador',    '#e0f9f8', '#0A2E4E');
+        ? badge('Administrador', '#1E3A8A', '#fff')
+        : badge('Trabajador',    '#E0F9F8', '#1E3A8A');
+}
+
+// ── Avatar / foto de perfil ──────────────────────────────────────────
+/** URL de la foto del usuario en sesión (o null si usa inicial). Carga 1 vez. */
+function avatarUrl(): ?string {
+    if (!isLoggedIn()) return null;
+    if (!array_key_exists('emp_foto', $_SESSION)) {
+        try {
+            $db   = (new Database())->conectar();
+            $stmt = $db->prepare("SELECT foto FROM empleados WHERE id = ?");
+            $stmt->execute([currentEmpId()]);
+            $_SESSION['emp_foto'] = $stmt->fetchColumn() ?: '';
+        } catch (\Throwable $e) { $_SESSION['emp_foto'] = ''; }
+    }
+    $f = $_SESSION['emp_foto'] ?? '';
+    return $f !== '' ? url($f) : null;
+}
+
+/** Devuelve el HTML del avatar: <img> con la foto o un círculo con la inicial. */
+function avatarHtml(?string $fotoUrl, ?string $nombre, float $size, float $font, string $bg = '#1A649C'): string {
+    $s = rtrim(rtrim(number_format($size, 3, '.', ''), '0'), '.');
+    if ($fotoUrl) {
+        return "<div style='width:{$s}rem;height:{$s}rem;border-radius:50%;overflow:hidden;flex-shrink:0;background:#fff;'>"
+             . "<img src='" . e($fotoUrl) . "' alt='' style='width:100%;height:100%;object-fit:cover;display:block;'></div>";
+    }
+    $ini = strtoupper(mb_substr($nombre ?: 'U', 0, 1));
+    $fs  = rtrim(rtrim(number_format($font, 3, '.', ''), '0'), '.');
+    return "<div style='width:{$s}rem;height:{$s}rem;border-radius:50%;background:{$bg};display:flex;"
+         . "align-items:center;justify-content:center;font-size:{$fs}rem;font-weight:700;color:#fff;flex-shrink:0;'>"
+         . e($ini) . "</div>";
 }
 
 // ── Settings (cached) ────────────────────────────────────────────────

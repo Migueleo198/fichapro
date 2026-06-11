@@ -10,9 +10,12 @@ class AjusteModel {
     }
 
     public function guardar(array $valores): void {
-        $stmt = $this->db->prepare("UPDATE ajustes SET valor = ? WHERE clave = ?");
+        $stmt = $this->db->prepare(
+            "INSERT INTO ajustes (clave, valor) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE valor = VALUES(valor)"
+        );
         foreach ($valores as $clave => $valor) {
-            $stmt->execute([$valor, $clave]);
+            $stmt->execute([$clave, $valor]);
         }
     }
 }

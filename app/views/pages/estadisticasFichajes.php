@@ -107,7 +107,7 @@ const DT=<?= json_encode(array_map('intval',$diasTotal)) ?>;
 const DR=<?= json_encode(array_map('intval',$diasRet)) ?>;
 const EL=<?= json_encode($estadoLabels) ?>;
 const ED=<?= json_encode($estadoData) ?>;
-const TEAL='#2563EB',NAVY='#1E3A8A';
+const TEAL='#1A649C',NAVY='#1E3A8A';
 
 new Chart(document.getElementById('chartDiarios'),{type:'bar',data:{labels:DL,datasets:[
   {label:'Total',data:DT,backgroundColor:'rgba(15,23,42,.7)',borderRadius:4},

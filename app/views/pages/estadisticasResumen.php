@@ -124,13 +124,13 @@ const DL=<?= json_encode($diasLabels) ?>;
 const DT=<?= json_encode(array_map('intval',$diasTotales)) ?>;
 const TN=<?= json_encode($topNombres) ?>;
 const TH=<?= json_encode(array_map('floatval',$topHoras)) ?>;
-const TEAL='#2563EB', NAVY='#1E3A8A', ORANGE='#f59e0b', GREEN='#10b981';
+const TEAL='#1A649C', NAVY='#1E3A8A', ORANGE='#f59e0b', GREEN='#10b981';
 
 Chart.defaults.font.family="'Inter',sans-serif";Chart.defaults.color='#64748B';
 
 new Chart(document.getElementById('chartEvolucion'),{type:'line',data:{labels:ML,datasets:[
   {label:'Fichajes',data:MF,borderColor:NAVY,backgroundColor:'rgba(15,23,42,.08)',tension:.4,fill:true,pointRadius:4,borderWidth:2},
-  {label:'Horas',data:MH,borderColor:TEAL,backgroundColor:'rgba(37,99,235,.08)',tension:.4,fill:true,yAxisID:'yH',pointRadius:4,borderWidth:2},
+  {label:'Horas',data:MH,borderColor:TEAL,backgroundColor:'rgba(26,100,156,.08)',tension:.4,fill:true,yAxisID:'yH',pointRadius:4,borderWidth:2},
   {label:'Retrasos',data:MR,borderColor:ORANGE,backgroundColor:'rgba(245,158,11,.06)',tension:.4,fill:true,pointRadius:4,borderWidth:2},
 ]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true},yH:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false}}}}});
 

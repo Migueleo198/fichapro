@@ -8,8 +8,8 @@ USE `fichapro`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `auditoria`, `password_resets`, `vehiculos`, `incidencias`,
-    `tareas`, `tipos_tarea`, `descansos`, `fichajes`, `ausencias`, `vacaciones`,
-    `tipos_ausencia`, `jornadas`, `ajustes`, `empleados`;
+    `tareas`, `tipos_tarea`, `descansos`, `compensaciones`, `fichajes`, `ausencias`,
+    `vacaciones`, `tipos_ausencia`, `jornadas`, `ajustes`, `empleados`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ── Empleados ────────────────────────────────────────────────────────
@@ -23,6 +23,7 @@ CREATE TABLE `empleados` (
   `telefono`         VARCHAR(20)  DEFAULT NULL,
   `email`            VARCHAR(150) NOT NULL,
   `fecha_nacimiento` DATE         DEFAULT NULL,
+  `foto`             VARCHAR(255) DEFAULT NULL,
   `rol`              ENUM('admin','trabajador') NOT NULL DEFAULT 'trabajador',
   `activo`           TINYINT(1)   NOT NULL DEFAULT 1,
   `created_at`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,6 +68,21 @@ CREATE TABLE `fichajes` (
   KEY `idx_fichaje_emp`   (`id_empleado`),
   KEY `idx_fichaje_fecha` (`fecha`),
   CONSTRAINT `fk_fichaje_emp` FOREIGN KEY (`id_empleado`) REFERENCES `empleados`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── Compensación de horas (extra pagadas o recuperadas) ─────────────
+CREATE TABLE `compensaciones` (
+  `id`          INT AUTO_INCREMENT PRIMARY KEY,
+  `id_empleado` INT NOT NULL,
+  `fecha`       DATE NOT NULL,
+  `horas`       DECIMAL(5,2) NOT NULL,
+  `tipo`        ENUM('pagada','recuperada') NOT NULL DEFAULT 'pagada',
+  `concepto`    VARCHAR(255) DEFAULT NULL,
+  `id_creador`  INT DEFAULT NULL,
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `idx_comp_emp`   (`id_empleado`),
+  KEY `idx_comp_fecha` (`fecha`),
+  CONSTRAINT `fk_comp_emp` FOREIGN KEY (`id_empleado`) REFERENCES `empleados`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── Descansos (pausas dentro de un fichaje) ─────────────────────────
@@ -126,6 +142,7 @@ CREATE TABLE `tipos_ausencia` (
   `tipo`           ENUM('baja','permiso','personal','otro') NOT NULL DEFAULT 'permiso',
   `remunerada`     TINYINT(1) NOT NULL DEFAULT 1,
   `dias_estimados` INT DEFAULT 0,
+  `limite_horas_anual` INT NOT NULL DEFAULT 0,   -- 0 = sin límite; horas remuneradas/año
   `activo`         TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -152,6 +169,7 @@ CREATE TABLE `ausencias` (
   `fecha_inicio`        DATE NOT NULL,
   `fecha_fin`           DATE DEFAULT NULL,
   `horas`               DECIMAL(5,2) DEFAULT NULL,
+  `horas_remuneradas`   DECIMAL(5,2) NOT NULL DEFAULT 0,
   `remunerada`          TINYINT(1) NOT NULL DEFAULT 1,
   `estado`              ENUM('pendiente','aprobada','rechazada') NOT NULL DEFAULT 'pendiente',
   `observaciones`       TEXT DEFAULT NULL,
@@ -213,20 +231,26 @@ INSERT INTO `ajustes` (`clave`,`valor`,`descripcion`) VALUES
 ('hora_inicio_jornada','08:00','Hora oficial de inicio de la jornada'),
 ('umbral_retraso_minutos','30','Margen en minutos antes de marcar un fichaje como retraso'),
 ('horas_jornada_defecto','7.5','Horas diarias por defecto'),
-('horas_semana_defecto','37.5','Horas semanales por defecto');
+('horas_semana_defecto','37.5','Horas semanales por defecto'),
+('smtp_host','smtp.gmail.com','Servidor SMTP para el envío de correos'),
+('smtp_port','587','Puerto SMTP (587 = TLS, 465 = SSL)'),
+('smtp_secure','tls','Cifrado SMTP: tls o ssl'),
+('smtp_user','','Usuario / correo remitente SMTP'),
+('smtp_pass','','Contraseña o contraseña de aplicación SMTP'),
+('smtp_from_name','FichaPro','Nombre mostrado como remitente');
 
 INSERT INTO `tipos_tarea` (`nombre`) VALUES
 ('Oficina'),('Teletrabajo'),('Visita a cliente'),('Formación');
 
-INSERT INTO `tipos_ausencia` (`nombre`,`descripcion`,`tipo`,`remunerada`,`dias_estimados`,`activo`) VALUES
-('Baja médica','Incapacidad temporal por enfermedad o accidente','baja',1,0,1),
-('Permiso retribuido','Permiso justificado con derecho a remuneración','permiso',1,1,1),
-('Asuntos propios','Días de libre disposición del trabajador','personal',1,1,1),
-('Permiso sin sueldo','Ausencia autorizada sin remuneración','otro',0,1,1),
-('Visita médica','Tiempo para acudir a consulta médica','permiso',1,0,1),
-('Mudanza','Cambio de domicilio habitual','permiso',1,1,1),
-('Asuntos familiares','Atención de un familiar','permiso',1,1,1),
-('Formación externa','Asistencia a formación fuera de la empresa','otro',0,1,1);
+INSERT INTO `tipos_ausencia` (`nombre`,`descripcion`,`tipo`,`remunerada`,`dias_estimados`,`limite_horas_anual`,`activo`) VALUES
+('Baja médica','Incapacidad temporal por enfermedad o accidente','baja',1,0,0,1),
+('Permiso retribuido','Permiso justificado con derecho a remuneración','permiso',1,1,24,1),
+('Asuntos propios','Días de libre disposición del trabajador','personal',1,1,40,1),
+('Permiso sin sueldo','Ausencia autorizada sin remuneración','otro',0,1,0,1),
+('Visita médica','Tiempo para acudir a consulta médica','permiso',1,0,16,1),
+('Mudanza','Cambio de domicilio habitual','permiso',1,1,8,1),
+('Asuntos familiares','Atención de un familiar','permiso',1,1,16,1),
+('Formación externa','Asistencia a formación fuera de la empresa','otro',0,1,0,1);
 
 INSERT INTO `jornadas` (`id_empleado`,`horas_dia`,`horas_semana`,`fecha_inicio`) VALUES
 (1,7.50,37.50,'2026-01-01'),

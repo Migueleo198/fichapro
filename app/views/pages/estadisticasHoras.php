@@ -116,7 +116,7 @@ const EO=<?= json_encode(array_map('floatval',$empOrd)) ?>;
 const EX=<?= json_encode(array_map('floatval',$empExtra)) ?>;
 const totOrd=<?= round($rh['total_ordinarias'] ?? 0,1) ?>;
 const totExt=<?= round($rh['total_extra'] ?? 0,1) ?>;
-const TEAL='#2563EB',NAVY='#1E3A8A',ORANGE='#f59e0b';
+const TEAL='#1A649C',NAVY='#1E3A8A',ORANGE='#f59e0b';
 
 new Chart(document.getElementById('chartHorasDiarias'),{type:'bar',data:{labels:DL,datasets:[
   {label:'Ordinarias',data:DO,backgroundColor:'rgba(15,23,42,.75)',borderRadius:3,stack:'h'},
