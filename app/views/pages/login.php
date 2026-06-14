@@ -36,6 +36,11 @@
         <div style="padding:1.8rem 1.9rem 1.9rem;">
             <h2 style="text-align:center;font-size:1.02rem;font-weight:700;color:var(--ink);margin:0 0 .25rem;">Inicia sesión</h2>
             <p style="text-align:center;font-size:.82rem;font-weight:500;color:var(--muted);margin:0 0 1.5rem;">Accede para fichar y gestionar tu jornada</p>
+            <?php if (isset($_GET['reset'])): ?>
+            <div style="margin-bottom:1.1rem;padding:.65rem .9rem;border-radius:9px;background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D;font-size:.82rem;font-weight:550;text-align:center;">
+                <i class="bi bi-check-circle-fill"></i> Contraseña actualizada. Ya puedes iniciar sesión.
+            </div>
+            <?php endif; ?>
             <form id="loginForm">
                 <div style="margin-bottom:1rem;">
                     <label style="display:block;font-size:.78rem;font-weight:600;color:var(--mid);margin-bottom:.4rem;">Usuario</label>
@@ -58,6 +63,9 @@
                     <i class="bi bi-box-arrow-in-right" style="margin-right:.4rem;"></i>Entrar
                 </button>
             </form>
+            <p style="text-align:center;margin:1.1rem 0 0;font-size:.82rem;">
+                <a href="<?= url('login/recuperar') ?>" style="color:var(--blue);font-weight:600;text-decoration:none;">¿Olvidaste tu contraseña?</a>
+            </p>
         </div>
     </div>
     <p style="text-align:center;font-size:.74rem;color:var(--muted);margin:1.3rem 0 0;font-weight:500;"><?= APP_NAME ?> · Control horario</p>

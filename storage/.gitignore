@@ -1,0 +1,4 @@
+# No se versionan las copias de seguridad; se conserva la carpeta y su protección.
+*
+!.gitignore
+!.htaccess

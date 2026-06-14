@@ -1,0 +1,42 @@
+# ============================================================
+#  FichaPro — protección de la raíz del proyecto
+#  La app se sirve por /public; este archivo bloquea el acceso
+#  web directo a ficheros sensibles cuando el proyecto cuelga de
+#  htdocs (XAMPP local). En producción el docroot debe ser /public.
+# ============================================================
+
+# Archivos ocultos (.env, .env.example, .gitignore, .htaccess…)
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Ficheros por extensión sensible (volcados SQL, docs, locks…)
+<FilesMatch "\.(env|sql|md|lock|dist|ini|sh|bak)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Manifiestos de Composer
+<FilesMatch "^composer\.(json|lock)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Sin listados de directorio
+Options -Indexes
