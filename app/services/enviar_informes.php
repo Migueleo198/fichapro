@@ -42,32 +42,44 @@ function fp_enviar_informes(PDO $db, string $desde, string $hasta, string $etiqu
     $compModel = new CompensacionModel($db);
     $empresa   = ajuste('nombre_empresa', 'Mi Empresa');
 
-    $enviados = 0; $omitidos = 0; $errores = [];
+    $enviados = 0; $omitidos = 0; $invalidos = 0; $errores = [];
+    $mail = null;   // una sola conexión SMTP reutilizada para todos los envíos
 
     foreach ($empModel->getAll(true) as $emp) {           // sólo activos
-        $email = trim($emp['email'] ?? '');
-        if ($email === '') { $omitidos++; continue; }
-
         $empId   = (int) $emp['id'];
+        $email   = trim($emp['email'] ?? '');
         $resumen = $infModel->resumenEmpleado($empId, $desde, $hasta);
-        $dias    = $infModel->fichajesEmpleado($empId, $desde, $hasta);
         $comps   = $compModel->getByEmpleado($empId, $desde, $hasta);
 
         // Sin actividad ni compensaciones en el periodo → no se envía nada.
         if ((int)($resumen['dias'] ?? 0) === 0 && empty($comps)) { $omitidos++; continue; }
 
-        $pdf = ReportGenerator::pdfEmpleado([
-            'empresa'        => $empresa,
-            'empleado'       => $emp,
-            'desde'          => $desde,
-            'hasta'          => $hasta,
-            'resumen'        => $resumen,
-            'dias'           => $dias,
-            'compensaciones' => $comps,
-        ]);
+        // Email ausente o con formato incorrecto → no se intenta enviar.
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $invalidos++;
+            $errores[] = trim(($emp['nombre'] ?? '') . ' ' . ($emp['apellidos'] ?? '')) . ': email no válido (' . ($email ?: 'vacío') . ')';
+            continue;
+        }
 
         try {
-            $mail = Mailer::crear();
+            if ($mail === null) {
+                $mail = Mailer::crear();
+                $mail->SMTPKeepAlive = true;          // mantiene la conexión abierta entre envíos
+            } else {
+                $mail->clearAllRecipients();
+                $mail->clearAttachments();
+            }
+
+            $pdf = ReportGenerator::pdfEmpleado([
+                'empresa'        => $empresa,
+                'empleado'       => $emp,
+                'desde'          => $desde,
+                'hasta'          => $hasta,
+                'resumen'        => $resumen,
+                'dias'           => $infModel->fichajesEmpleado($empId, $desde, $hasta),
+                'compensaciones' => $comps,
+            ]);
+
             $mail->addAddress($email, trim(($emp['nombre'] ?? '') . ' ' . ($emp['apellidos'] ?? '')));
             $mail->isHTML(true);
             $mail->Subject = "$etiqueta · " . fechaLarga($desde) . ' — ' . fechaLarga($hasta);
@@ -77,11 +89,13 @@ function fp_enviar_informes(PDO $db, string $desde, string $hasta, string $etiqu
             $mail->send();
             $enviados++;
         } catch (\Throwable $e) {
-            $errores[] = $email . ': ' . $e->getMessage();
+            $errores[] = $email . ': ' . ($mail ? $mail->ErrorInfo : $e->getMessage());
         }
     }
 
-    return ['enviados' => $enviados, 'omitidos' => $omitidos, 'errores' => $errores];
+    if ($mail !== null) { try { $mail->smtpClose(); } catch (\Throwable $e) {} }
+
+    return ['enviados' => $enviados, 'omitidos' => $omitidos, 'invalidos' => $invalidos, 'errores' => $errores];
 }
 
 /** Cuerpo HTML del correo. */

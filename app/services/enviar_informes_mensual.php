@@ -18,6 +18,6 @@ $db = (new Database())->conectar();
 $r = fp_enviar_informes($db, $desde, $hasta, 'Informe mensual de horas');
 
 echo "Informe MENSUAL · periodo {$desde} a {$hasta}\n";
-echo "Enviados: {$r['enviados']} · Omitidos (sin email/actividad): {$r['omitidos']}\n";
-foreach ($r['errores'] as $err) echo "  ERROR: {$err}\n";
+echo "Enviados: {$r['enviados']} · Omitidos (sin actividad): {$r['omitidos']} · Emails inválidos: " . ($r['invalidos'] ?? 0) . "\n";
+foreach ($r['errores'] as $err) echo "  AVISO: {$err}\n";
 echo "Proceso finalizado.\n";

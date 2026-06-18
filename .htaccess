@@ -1,4 +1,16 @@
 # ============================================================
+#  FichaPro — redirección automática al login
+#  La app se sirve por /public, así que la raíz del proyecto
+#  (/fichapro/) redirige al login para no tener que escribir /public.
+# ============================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # /fichapro/  (raíz del proyecto)  →  login
+    RewriteRule ^$ /fichapro/public/login [R=302,L]
+</IfModule>
+
+# ============================================================
 #  FichaPro — protección de la raíz del proyecto
 #  La app se sirve por /public; este archivo bloquea el acceso
 #  web directo a ficheros sensibles cuando el proyecto cuelga de
